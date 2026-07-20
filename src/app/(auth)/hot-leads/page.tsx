@@ -5,6 +5,8 @@ import {
   Plus, Flame, Loader2, Search, X, Trash2, Edit3,
   ChevronLeft, ChevronRight, UserPlus, CheckCircle2,
 } from 'lucide-react';
+import { useUser } from '@/components/UserProvider';
+import { hasPermission } from '@/lib/permissions';
 import { format } from 'date-fns';
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -108,6 +110,9 @@ function getInitials(name: string) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function HotLeadsPage() {
+  const currentUser = useUser();
+  const canDeleteLead = hasPermission(currentUser?.role ?? '', 'leads:delete');
+
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -530,14 +535,16 @@ export default function HotLeadsPage() {
                   >
                     <Edit3 size={15} />
                   </button>
-                  <button
-                    onClick={() => handleDelete(lead.lead_id)}
-                    className="p-2 rounded-lg transition-colors hover:bg-red-50"
-                    style={{ color: '#c0392b' }}
-                    title="Delete"
-                  >
-                    <Trash2 size={15} />
-                  </button>
+                  {canDeleteLead && (
+                    <button
+                      onClick={() => handleDelete(lead.lead_id)}
+                      className="p-2 rounded-lg transition-colors hover:bg-red-50"
+                      style={{ color: '#c0392b' }}
+                      title="Delete"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query, queryOne } from '@/lib/db'
 import { verifyToken, COOKIE_NAME } from '@/lib/auth'
+import { hasPermission } from '@/lib/permissions'
 
 function getUser(req: NextRequest) {
   const token = req.cookies.get(COOKIE_NAME)?.value
@@ -69,7 +70,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = getUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (user.role !== 'admin') return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
+  if (!hasPermission(user.role, 'health_tips:delete')) return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
 
   const { id: idStr } = await params
   const id = parseInt(idStr, 10)

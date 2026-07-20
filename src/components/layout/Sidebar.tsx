@@ -7,18 +7,19 @@ import {
   LayoutDashboard, Users, Calendar, Stethoscope,
   LogOut, Menu, X, ChevronRight, Flame, HelpCircle
 } from 'lucide-react';
+import { hasPermission, type Permission } from '@/lib/permissions';
 
 interface SidebarProps {
   user: { name: string; role: string; email: string };
 }
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/patients', icon: Users, label: 'Patients' },
-  { href: '/appointments', icon: Calendar, label: 'Appointments' },
-  { href: '/hot-leads', icon: Flame, label: 'Hot Leads' },
-  { href: '/faq', icon: HelpCircle, label: 'FAQ' },
-  { href: '/health-tips', icon: Stethoscope, label: 'Health Tips' },
+const NAV_ITEMS = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', permission: 'dashboard:view' as Permission },
+  { href: '/patients', icon: Users, label: 'Patients', permission: 'patients:view' as Permission },
+  { href: '/appointments', icon: Calendar, label: 'Appointments', permission: 'appointments:view' as Permission },
+  { href: '/hot-leads', icon: Flame, label: 'Hot Leads', permission: 'leads:view' as Permission },
+  { href: '/faq', icon: HelpCircle, label: 'FAQ', permission: 'faq:view' as Permission },
+  { href: '/health-tips', icon: Stethoscope, label: 'Health Tips', permission: 'health_tips:view' as Permission },
 ];
 
 export default function Sidebar({ user }: SidebarProps) {
@@ -33,6 +34,7 @@ export default function Sidebar({ user }: SidebarProps) {
   }
 
   const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+  const navItems = NAV_ITEMS.filter(({ permission }) => hasPermission(user.role, permission));
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">

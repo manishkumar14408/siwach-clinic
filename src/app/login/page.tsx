@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Heart, Shield, Stethoscope } from 'lucide-react';
+import { defaultPath } from '@/lib/permissions';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push('/dashboard');
+      router.push(defaultPath(data.data.role));
       router.refresh();
     } catch {
       setError('Network error. Please try again.');

@@ -13,7 +13,14 @@ interface FAQ {
   updated_at: string;
 }
 
-const CATEGORIES = ['General', 'Appointments', 'Treatment', 'Billing', 'Medical'];
+const CATEGORIES = [
+  'Doctor & Clinic Information',
+  'Orthopedics (Bones, Joints, Muscles)',
+  'After Booking & Confirmation',
+  'Fees, Billing & Payment (FAQ)',
+  'Online vs In‑Clinic Consultation',
+  'General',
+];
 
 export default function FAQPage() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);

@@ -267,7 +267,7 @@ export default function PatientDetailPage() {
                   >
                     {!isHuman && (
                       <p className="text-xs font-semibold mb-1" style={{ color: '#075E54' }}>
-                        Clinic AI
+                        Hospital AI Assistant
                       </p>
                     )}
                     {isHuman ? (
