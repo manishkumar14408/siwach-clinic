@@ -268,7 +268,7 @@ export default function HealthTipsPage() {
                 {editingTip ? 'Edit health tip' : 'Add health tip'}
               </h2>
               <p className="text-sm mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                Create or update advice snippets to keep your clinic guidance current.
+                Create or update advice snippets to keep your hospital guidance current.
               </p>
             </div>
 

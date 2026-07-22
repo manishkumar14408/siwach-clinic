@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import {
   ArrowLeft, Phone, Mail, MapPin, Heart, AlertCircle, Loader2, User, MessageCircle
 } from 'lucide-react';
+import PatientAvatar from '@/components/PatientAvatar';
 
 interface Patient {
   patient_uhid: number;
@@ -25,12 +26,6 @@ interface Patient {
 interface ChatRow {
   id: number;
   message: { type: 'human' | 'ai'; content: string };
-}
-
-function getInitials(name: string) {
-  const parts = name.trim().split(' ').filter(Boolean);
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
 }
 
 function renderMarkdown(text: string) {
@@ -113,10 +108,7 @@ export default function PatientDetailPage() {
       {/* Patient header card */}
       <div className="card">
         <div className="flex items-start gap-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-semibold flex-shrink-0"
-            style={{ background: 'var(--color-primary-light)', color: 'var(--color-primary-dark)' }}>
-            {getInitials(patient.full_name)}
-          </div>
+          <PatientAvatar uhid={patient.patient_uhid} name={patient.full_name} size={72} shape="square" ring />
           <div className="flex-1">
             <div className="flex items-start justify-between flex-wrap gap-3">
               <div>
@@ -219,10 +211,7 @@ export default function PatientDetailPage() {
         {/* Chat header */}
         <div className="flex items-center gap-3 px-5 py-4"
           style={{ background: '#075E54', color: '#fff' }}>
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold"
-            style={{ background: '#128C7E' }}>
-            {getInitials(patient.full_name)}
-          </div>
+          <PatientAvatar uhid={patient.patient_uhid} name={patient.full_name} size={36} bg="#128C7E" fg="#fff" />
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-sm truncate">{patient.full_name}</p>
             <p className="text-xs opacity-75">

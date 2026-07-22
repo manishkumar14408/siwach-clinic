@@ -14,11 +14,11 @@ interface FAQ {
 }
 
 const CATEGORIES = [
-  'Doctor & Clinic Information',
+  'Doctor & Hospital Information',
   'Orthopedics (Bones, Joints, Muscles)',
   'After Booking & Confirmation',
   'Fees, Billing & Payment (FAQ)',
-  'Online vs In‑Clinic Consultation',
+  'Online vs In‑Hospital Consultation',
   'General',
 ];
 

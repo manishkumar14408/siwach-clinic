@@ -6,6 +6,7 @@ import {
   Search, Users, Phone, ChevronRight, ChevronLeft,
   Loader2, X, Plus, Edit3, CheckCircle2, XCircle,
 } from 'lucide-react';
+import PatientAvatar from '@/components/PatientAvatar';
 
 interface Patient {
   patient_uhid: number;
@@ -59,12 +60,6 @@ const avatarColors = [
   ['#f0edf9', '#5a3f9a'], ['#e8f5f8', '#1a6d80'],
   ['#fdf0ee', '#9a2a1a'],
 ];
-
-function getInitials(name: string) {
-  const parts = name.trim().split(' ').filter(Boolean);
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`.toUpperCase();
-}
 
 function FeedbackToggle({ patientId, value, followupSent, onChange }: { patientId: number; value: 'GFORM' | 'GREVIEW' | null; followupSent: boolean; onChange: (v: 'GFORM' | 'GREVIEW' | null) => void }) {
   const [saving, setSaving] = useState(false);
@@ -326,9 +321,7 @@ export default function PatientsPage() {
                 <div key={patient.patient_uhid} className="group grid grid-cols-12 gap-4 px-6 py-4 items-center transition-colors hover:bg-[#f8f6f1]">
                   {/* Patient */}
                   <Link href={`/patients/${patient.patient_uhid}`} className="col-span-3 flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0" style={{ background: bg, color: fg }}>
-                      {getInitials(patient.full_name)}
-                    </div>
+                    <PatientAvatar uhid={patient.patient_uhid} name={patient.full_name} size={36} bg={bg} fg={fg} />
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate" style={{ color: 'var(--color-text)' }}>{patient.full_name}</p>
                       <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>

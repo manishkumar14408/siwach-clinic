@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -8,6 +9,7 @@ import {
   LogOut, Menu, X, ChevronRight, Flame, HelpCircle
 } from 'lucide-react';
 import { hasPermission, type Permission } from '@/lib/permissions';
+import logo from '@/assets/logo.png';
 
 interface SidebarProps {
   user: { name: string; role: string; email: string };
@@ -39,18 +41,9 @@ export default function Sidebar({ user }: SidebarProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 border-b" style={{ borderColor: 'var(--color-border)' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'var(--color-primary)', color: 'white' }}>
-            <Stethoscope size={18} />
-          </div>
-          <div>
-            <p className="font-display font-semibold text-sm leading-tight" style={{ color: 'var(--color-text)' }}>
-              Siwach Sanjeevani
-            </p>
-            <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Orthopaedic Clinic</p>
-          </div>
+      <div className="px-6 py-5 border-b" style={{ borderColor: 'var(--color-border)' }}>
+        <div className="relative overflow-hidden" style={{ height: 60, width: 132 }}>
+          <Image src={logo} alt="Siwach Sanjeevani Hospital" fill sizes="132px" className="object-cover" priority />
         </div>
       </div>
 
@@ -117,9 +110,8 @@ export default function Sidebar({ user }: SidebarProps) {
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14"
         style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)' }}>
-        <div className="flex items-center gap-2">
-          <Stethoscope size={18} style={{ color: 'var(--color-primary)' }} />
-          <span className="font-display font-semibold text-sm">Siwach Sanjeevani</span>
+        <div className="relative overflow-hidden" style={{ height: 34, width: 75 }}>
+          <Image src={logo} alt="Siwach Sanjeevani Hospital" fill sizes="75px" className="object-cover" priority />
         </div>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg"
           style={{ color: 'var(--color-text)' }}>

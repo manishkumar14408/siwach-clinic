@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Heart, Shield, Stethoscope } from 'lucide-react';
 import { defaultPath } from '@/lib/permissions';
+import logo from '@/assets/logo.png';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -55,13 +57,12 @@ export default function LoginPage() {
 
         {/* Logo area */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.15)' }}>
-              <Stethoscope size={20} className="text-white" />
+          <div className="inline-block rounded-2xl p-4 shadow-lg" style={{ background: 'rgba(255,255,255,0.96)' }}>
+            <div className="relative overflow-hidden" style={{ height: 54, width: 119 }}>
+              <Image src={logo} alt="Siwach Sanjeevani Hospital" fill sizes="119px" className="object-cover" priority />
             </div>
-            <span className="text-white font-display text-lg font-semibold tracking-wide">Siwach Sanjeevani</span>
           </div>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>Orthopaedic Clinic</p>
+          <p className="text-sm mt-3" style={{ color: 'rgba(255,255,255,0.5)' }}>Orthopaedic Hospital</p>
         </div>
 
         {/* Main content */}
@@ -93,7 +94,7 @@ export default function LoginPage() {
         {/* Bottom */}
         <div className="relative z-10">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-            © 2024 Siwach Sanjeevani Orthopaedic Clinic
+            © 2026 Siwach Sanjeevani Orthopaedic Hospital
           </p>
         </div>
       </div>
@@ -103,13 +104,10 @@ export default function LoginPage() {
         <div className="w-full max-w-md animate-slide-up">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <div className="inline-flex items-center gap-2 mb-1">
-              <Stethoscope size={22} style={{ color: 'var(--color-primary)' }} />
-              <span className="font-display text-xl font-semibold" style={{ color: 'var(--color-text)' }}>
-                Siwach Sanjeevani
-              </span>
+            <div className="relative overflow-hidden mx-auto mb-1" style={{ height: 46, width: 101 }}>
+              <Image src={logo} alt="Siwach Sanjeevani Hospital" fill sizes="101px" className="object-cover" priority />
             </div>
-            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Orthopaedic Clinic</p>
+            <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Orthopaedic Hospital</p>
           </div>
 
           <div className="card">

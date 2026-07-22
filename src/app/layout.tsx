@@ -17,8 +17,8 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Siwach Sanjeevani Orthopaedic Clinic',
-  description: 'Patient management system for Siwach Sanjeevani Orthopaedic Clinic',
+  title: 'Siwach Sanjeevani Orthopaedic Hospital',
+  description: 'Patient management system for Siwach Sanjeevani Orthopaedic Hospital',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
