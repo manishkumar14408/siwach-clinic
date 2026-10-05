@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Users, Calendar, Flame, RefreshCw, TrendingUp,
@@ -361,7 +362,7 @@ export default function DashboardPage() {
 
         const fields = [
           { label: 'Lead ID',           value: `#${lead.lead_id}` },
-          { label: 'Patient',           value: lead.patient_name || `UHID #${lead.patient_id}` },
+          { label: 'Patient',           value: lead.patient_name || `UHID #${lead.patient_id}`, href: `/patients/${lead.patient_id}` },
           { label: 'WhatsApp',          value: lead.whatsapp_no },
           { label: 'Status',            value: lead.status, badge: sc },
           { label: 'Hot Lead',          value: lead.hot_lead ? '🔥 Yes' : 'No' },
@@ -391,9 +392,13 @@ export default function DashboardPage() {
                     {(lead.patient_name || lead.patient_id).charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
+                    <Link
+                      href={`/patients/${lead.patient_id}`}
+                      className="font-display text-lg font-semibold underline"
+                      style={{ color: '#2563eb' }}
+                    >
                       {lead.patient_name || `UHID #${lead.patient_id}`}
-                    </h2>
+                    </Link>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className={`badge ${sc} capitalize`}>{lead.status}</span>
                       {lead.hot_lead && (
@@ -412,11 +417,19 @@ export default function DashboardPage() {
 
               {/* Fields grid */}
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-                {fields.map(({ label, value, badge }) => (
+                {fields.map(({ label, value, badge, href }) => (
                   <div key={label}>
                     <p className="text-xs mb-0.5" style={{ color: 'var(--color-text-muted)' }}>{label}</p>
                     {badge ? (
                       <span className={`badge ${badge} capitalize`}>{value ?? '—'}</span>
+                    ) : href ? (
+                      <Link
+                        href={href}
+                        className="text-sm font-medium break-words underline"
+                        style={{ color: '#2563eb' }}
+                      >
+                        {value ?? '—'}
+                      </Link>
                     ) : (
                       <p className="text-sm font-medium break-words" style={{ color: 'var(--color-text)' }}>
                         {value ?? '—'}

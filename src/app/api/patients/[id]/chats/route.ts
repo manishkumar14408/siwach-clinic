@@ -23,11 +23,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!patient) return NextResponse.json({ error: 'Patient not found' }, { status: 404 })
     if (!patient.whatsapp_no) return NextResponse.json({ data: [] })
 
-    // Messages are stored in three shapes:
+    // Messages are stored in two shapes:
     //  - flat: { type: 'human'|'ai', content, tool_calls, ... }
-    //  - data-wrapped: { type: 'human'|'ai', data: { content, tool_calls, ... } }
     //  - nested langchain_core constructor: { id: [..., 'HumanMessage'|'AIMessage'], kwargs: { content, tool_calls, ... } }
-    // Normalize all three to { type, content } and skip tool messages / ai tool-call invocation rows.
+    // Normalize both to { type, content } and skip tool messages / ai tool-call invocation rows.
     const chats = await query<{ id: number; message: { type: string; content: string } }>(
       `SELECT id,
               jsonb_build_object(
@@ -37,13 +36,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
                           WHEN message->'id'->>2 = 'HumanMessage' THEN 'human'
                           WHEN message->'id'->>2 = 'AIMessage' THEN 'ai'
                         END,
-                'content', COALESCE(message->>'content', message->'data'->>'content', message->'kwargs'->>'content')
+                'content', COALESCE(message->>'content', message->'kwargs'->>'content')
               ) AS message
        FROM n8n_chat_histories
        WHERE session_id = $1
          AND (
-           (message->>'type' = 'human')
-           OR (message->>'type' = 'ai' AND COALESCE(message->'tool_calls', message->'data'->'tool_calls', '[]'::jsonb) = '[]'::jsonb)
+           (message->>'type' = 'human' AND message ? 'content')
+           OR (message->>'type' = 'ai' AND message ? 'content' AND COALESCE(message->'tool_calls', '[]'::jsonb) = '[]'::jsonb)
            OR (message->'id'->>2 = 'HumanMessage')
            OR (message->'id'->>2 = 'AIMessage' AND COALESCE(message->'kwargs'->'tool_calls', '[]'::jsonb) = '[]'::jsonb)
          )
