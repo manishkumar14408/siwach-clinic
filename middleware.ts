@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const COOKIE_NAME = 'siwach_auth_token';
 
 // Pages that only admin can visit. Everything else is open to all authenticated roles.
-const ADMIN_ONLY = ['/dashboard', '/faq', '/health-tips'];
+const ADMIN_ONLY = ['/dashboard', '/faq', '/health-tips', '/schedulers'];
 
 // Where each role lands when they have no access to the requested page.
 const ROLE_DEFAULT: Record<string, string> = {
@@ -52,5 +52,6 @@ export const config = {
     '/hot-leads/:path*',
     '/faq/:path*',
     '/health-tips/:path*',
+    '/schedulers/:path*',
   ],
 };

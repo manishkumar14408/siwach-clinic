@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Users, Calendar, Stethoscope,
-  LogOut, Menu, X, ChevronRight, Flame, HelpCircle
+  LogOut, Menu, X, ChevronRight, Flame, HelpCircle, Timer
 } from 'lucide-react';
 import { hasPermission, type Permission } from '@/lib/permissions';
 import logo from '@/assets/logo.png';
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { href: '/hot-leads', icon: Flame, label: 'Hot Leads', permission: 'leads:view' as Permission },
   { href: '/faq', icon: HelpCircle, label: 'FAQ', permission: 'faq:view' as Permission },
   { href: '/health-tips', icon: Stethoscope, label: 'Health Tips', permission: 'health_tips:view' as Permission },
+  { href: '/schedulers', icon: Timer, label: 'Schedulers', permission: 'schedulers:view' as Permission },
 ];
 
 export default function Sidebar({ user }: SidebarProps) {

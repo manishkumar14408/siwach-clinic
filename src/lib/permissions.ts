@@ -6,7 +6,8 @@ export type Permission =
   | 'appointments:view' | 'appointments:create' | 'appointments:update' | 'appointments:delete'
   | 'leads:view' | 'leads:create' | 'leads:update' | 'leads:delete'
   | 'faq:view' | 'faq:create' | 'faq:update' | 'faq:delete'
-  | 'health_tips:view' | 'health_tips:create' | 'health_tips:update' | 'health_tips:delete';
+  | 'health_tips:view' | 'health_tips:create' | 'health_tips:update' | 'health_tips:delete'
+  | 'schedulers:view';
 
 const ALL_PERMISSIONS: Permission[] = [
   'dashboard:view',
@@ -15,6 +16,7 @@ const ALL_PERMISSIONS: Permission[] = [
   'leads:view', 'leads:create', 'leads:update', 'leads:delete',
   'faq:view', 'faq:create', 'faq:update', 'faq:delete',
   'health_tips:view', 'health_tips:create', 'health_tips:update', 'health_tips:delete',
+  'schedulers:view',
 ];
 
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
@@ -40,6 +42,7 @@ export const PAGE_PERMISSIONS: Array<{ path: string; permission: Permission }> =
   { path: '/hot-leads', permission: 'leads:view' },
   { path: '/faq', permission: 'faq:view' },
   { path: '/health-tips', permission: 'health_tips:view' },
+  { path: '/schedulers', permission: 'schedulers:view' },
 ];
 
 // First page the role can access — used as the fallback redirect.

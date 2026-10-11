@@ -71,3 +71,56 @@ export interface ApiResponse<T = unknown> {
   error?: string;
   message?: string;
 }
+
+// ── n8n scheduler lifecycle ──────────────────────────────────────────────────
+
+export type SchedulerState = 'running' | 'failing' | 'disabled' | 'workflow_inactive';
+
+export interface SchedulerRun {
+  id: number;
+  trigger: string;
+  status: 'success' | 'error' | 'crashed' | 'running' | 'waiting' | 'canceled' | string;
+  mode: string;
+  started_at: string;
+  stopped_at: string | null;
+  duration_ms: number | null;
+}
+
+export interface SchedulerGap {
+  from: string;
+  to: string;
+  missed: number;
+}
+
+export interface Scheduler {
+  name: string;
+  state: SchedulerState;
+  disabled: boolean;
+  schedule: string;
+  next_run: string | null;
+  last_run: SchedulerRun | null;
+  last_success_at: string | null;
+  last_error_at: string | null;
+  runs: number;
+  errors: number;
+  steps: string[][];
+  gaps: SchedulerGap[];
+}
+
+export interface SchedulerOverview {
+  workflow: {
+    id: string;
+    name: string;
+    active: boolean;
+    updated_at: string;
+    live_version_at: string | null;
+    has_unpublished_changes: boolean;
+    timezone: string;
+    timezone_is_default: boolean;
+    n8n_url: string | null;
+  };
+  window_days: number;
+  generated_at: string;
+  schedulers: Scheduler[];
+  runs: SchedulerRun[];
+}

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import {
   ArrowLeft, Phone, Mail, MapPin, Heart, AlertCircle, Loader2, User, MessageCircle
 } from 'lucide-react';
@@ -37,8 +37,11 @@ function renderMarkdown(text: string) {
   return html;
 }
 
-export default function PatientDetailPage() {
+function PatientDetail() {
   const params = useParams();
+  // The list passes its page/search in ?from= so Back returns to the same spot.
+  const from = useSearchParams().get('from');
+  const backHref = from ? `/patients?${from}` : '/patients';
   const id = params.id as string;
 
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -91,7 +94,7 @@ export default function PatientDetailPage() {
       <div className="text-center py-16">
         <AlertCircle size={40} className="mx-auto mb-3 opacity-30" style={{ color: 'var(--color-text-muted)' }} />
         <p style={{ color: 'var(--color-text-muted)' }}>Patient not found</p>
-        <Link href="/patients" className="btn-secondary mt-4 inline-flex">Back to patients</Link>
+        <Link href={backHref} className="btn-secondary mt-4 inline-flex">Back to patients</Link>
       </div>
     );
   }
@@ -99,7 +102,7 @@ export default function PatientDetailPage() {
   return (
     <div className="space-y-6">
       {/* Back */}
-      <Link href="/patients" className="inline-flex items-center gap-2 text-sm transition-colors"
+      <Link href={backHref} className="inline-flex items-center gap-2 text-sm transition-colors"
         style={{ color: 'var(--color-text-muted)' }}>
         <ArrowLeft size={15} />
         Back to Patients
@@ -276,5 +279,14 @@ export default function PatientDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PatientDetailPage() {
+  // useSearchParams needs a Suspense boundary in the App Router.
+  return (
+    <Suspense fallback={null}>
+      <PatientDetail />
+    </Suspense>
   );
 }

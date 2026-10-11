@@ -324,17 +324,24 @@ export default function HotLeadsPage() {
         ? `${form.appointment_date} ${form.appointment_time ? form.appointment_time + ':00.000000' : '00:00:00.000000'}`
         : null;
 
-      const payload = {
-        patient_id: parseInt(form.patient_id, 10),
-        start_day: todayStr(),
-        end_day: null,
+      const editable = {
         appointment_time: appointmentDatetime,
         concern: form.concern.trim(),
         booked_against: form.booked_against || null,
         hot_lead: form.hot_lead,
-        status: 'open',
-        manually_added: true,
       };
+      // Editing only sends the fields the form changes, so a lead keeps its
+      // original start day (n8n closes leads by start_day age) and origin flag.
+      const payload = editingLeadId !== null
+        ? editable
+        : {
+            ...editable,
+            patient_id: parseInt(form.patient_id, 10),
+            start_day: todayStr(),
+            end_day: null,
+            status: 'open',
+            manually_added: true,
+          };
 
       const res = await fetch(
         editingLeadId !== null ? `/api/hot-leads/${editingLeadId}` : '/api/hot-leads',

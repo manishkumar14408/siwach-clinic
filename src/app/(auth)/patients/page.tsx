@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Search, Users, Phone, ChevronRight, ChevronLeft,
   Loader2, X, Plus, Edit3, CheckCircle2, XCircle,
@@ -123,12 +124,15 @@ console.log(followupSent, value, 'followupSent, value');
   );
 }
 
-export default function PatientsPage() {
+function PatientsList() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  // Page and search live in the URL so they survive opening a patient and coming back.
+  const [search, setSearch] = useState(() => searchParams.get('search') ?? '');
+  const [page, setPage] = useState(() => Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1));
   const [loading, setLoading] = useState(true);
   const LIMIT = 10;
 
@@ -163,7 +167,23 @@ export default function PatientsPage() {
     return () => clearTimeout(timer);
   }, [fetchPatients]);
 
-  useEffect(() => { setPage(1); }, [search]);
+  const listQuery = new URLSearchParams({
+    ...(search ? { search } : {}),
+    ...(page > 1 ? { page: String(page) } : {}),
+  }).toString();
+
+  useEffect(() => {
+    router.replace(listQuery ? `/patients?${listQuery}` : '/patients', { scroll: false });
+  }, [router, listQuery]);
+
+  // Patient links carry the list position so "Back to Patients" returns to it.
+  const patientHref = (uhid: number) =>
+    listQuery ? `/patients/${uhid}?from=${encodeURIComponent(listQuery)}` : `/patients/${uhid}`;
+
+  function changeSearch(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
 
   function updateFeedbackType(patientUhid: number, value: 'GFORM' | 'GREVIEW' | null) {
     setPatients(prev => prev.map(p => p.patient_uhid === patientUhid ? { ...p, feedback_type: value } : p));
@@ -269,9 +289,9 @@ export default function PatientsPage() {
       {/* Search */}
       <div className="relative">
         <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-light)' }} />
-        <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, phone, or email..." className="input-field pl-11 pr-11" />
+        <input type="text" value={search} onChange={e => changeSearch(e.target.value)} placeholder="Search by name, phone, or email..." className="input-field pl-11 pr-11" />
         {search && (
-          <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg" style={{ color: 'var(--color-text-light)' }}>
+          <button onClick={() => changeSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg" style={{ color: 'var(--color-text-light)' }}>
             <X size={14} />
           </button>
         )}
@@ -320,7 +340,7 @@ export default function PatientsPage() {
               return (
                 <div key={patient.patient_uhid} className="group grid grid-cols-12 gap-4 px-6 py-4 items-center transition-colors hover:bg-[#f8f6f1]">
                   {/* Patient */}
-                  <Link href={`/patients/${patient.patient_uhid}`} className="col-span-3 flex items-center gap-3 min-w-0">
+                  <Link href={patientHref(patient.patient_uhid)} className="col-span-3 flex items-center gap-3 min-w-0">
                     <PatientAvatar uhid={patient.patient_uhid} name={patient.full_name} size={36} bg={bg} fg={fg} />
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate" style={{ color: 'var(--color-text)' }}>{patient.full_name}</p>
@@ -369,7 +389,7 @@ export default function PatientsPage() {
                     >
                       <Edit3 size={14} />
                     </button>
-                    <Link href={`/patients/${patient.patient_uhid}`} className="p-1.5 rounded-lg">
+                    <Link href={patientHref(patient.patient_uhid)} className="p-1.5 rounded-lg">
                       <ChevronRight size={15} style={{ color: 'var(--color-text-light)' }} />
                     </Link>
                   </div>
@@ -546,5 +566,14 @@ export default function PatientsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PatientsPage() {
+  // useSearchParams needs a Suspense boundary in the App Router.
+  return (
+    <Suspense fallback={null}>
+      <PatientsList />
+    </Suspense>
   );
 }
